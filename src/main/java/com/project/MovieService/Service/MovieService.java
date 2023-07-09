@@ -5,6 +5,8 @@ import com.project.MovieService.Repository.MovieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class MovieService {
 
@@ -19,6 +21,10 @@ public class MovieService {
 
     public Movie getMovie(Long id){
        return movieRepository.findById(id).orElseThrow(()-> new RuntimeException("Movie Not Found"));
+    }
+
+    public List<Movie>getallMovies(){
+        return movieRepository.findAll();
     }
 
     public Movie updateMovie(Long id, Movie movie){

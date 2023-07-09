@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/movies")
 @Slf4j
@@ -18,7 +20,7 @@ public class MovieController {
     @GetMapping("/{id}")
     public ResponseEntity<Movie> getMovie(@PathVariable Long id){
         Movie getMovie=movieService.getMovie(id);
-        log.info("GetMovie Movie with Id: {}",getMovie.getId());
+        log.info("Get Movie with Id: {}",getMovie.getId());
         return ResponseEntity.ok(getMovie);
     }
 
@@ -27,6 +29,12 @@ public class MovieController {
         Movie createMovie=movieService.createMovie(movie);
         log.info("Created Movie with Id: {}",createMovie.getId());
         return ResponseEntity.ok(createMovie);
+    }
+    @GetMapping("/allMovies")
+    public ResponseEntity<List<Movie>>getAllMovies(){
+    List<Movie> movie =movieService.getallMovies();
+    log.info("get All movies");
+    return ResponseEntity.ok(movie);
     }
 
     @PutMapping("/{id}")
