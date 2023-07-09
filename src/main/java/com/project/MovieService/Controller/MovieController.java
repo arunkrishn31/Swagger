@@ -38,7 +38,7 @@ public class MovieController {
     }
 
     @PutMapping("/{id}")
-    public void updateMovie(@PathVariable Long id,@RequestBody Movie movie){
+    public void updateMovie(@PathVariable Long id,@RequestBody(required = false) Movie movie){
          movieService.updateMovie(id,movie);
         log.info("Updated a Movie with Id: {}",id);
     }
