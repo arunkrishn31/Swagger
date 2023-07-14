@@ -1,9 +1,12 @@
 package com.project.MovieService.Service;
 
+import com.project.MovieService.Exception.NotFoundException;
 import com.project.MovieService.Model.Movie;
 import com.project.MovieService.Repository.MovieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.project.MovieService.Exception.InvalidDataException;
 
 import java.util.List;
 
@@ -15,12 +18,12 @@ public class MovieService {
 
     public Movie createMovie(Movie movie){
         if(movie==null)
-            throw   new RuntimeException("Invalid Movie");
+            throw new InvalidDataException("Invalid Movie");
         return movieRepository.save(movie);
     }
 
     public Movie getMovie(Long id){
-       return movieRepository.findById(id).orElseThrow(()-> new RuntimeException("Movie Not Found"));
+       return movieRepository.findById(id).orElseThrow(()-> new NotFoundException("Movie Not Found with id:"+id));
     }
 
     public List<Movie>getallMovies(){
@@ -29,7 +32,7 @@ public class MovieService {
 
     public Movie updateMovie(Long id, Movie movie){
         if(movie==null||id==null)
-            throw new RuntimeException("Invalid Movie");
+            throw new InvalidDataException("Invalid Movie");
         if(movieRepository.existsById(movie.getId())){
             Movie updateMovie=movieRepository.getReferenceById(id);
             updateMovie.setId(movie.getId());
@@ -38,7 +41,7 @@ public class MovieService {
             updateMovie.setActors(movie.getActors());
            return movieRepository.save(updateMovie);
         }else {
-            throw  new RuntimeException("Movie Not Found");
+            throw  new NotFoundException("Movie Not Found with id: "+id);
         }
     }
 
@@ -46,7 +49,7 @@ public class MovieService {
         if(movieRepository.existsById(id)){
              movieRepository.deleteById(id);
         }else {
-            throw  new RuntimeException("Movie Not Found");
+            throw  new NotFoundException("Movie Not Found with id: "+id);
         }
     }
 }
