@@ -3,6 +3,8 @@ package com.project.MovieService.Controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.MovieService.Model.Movie;
 import com.project.MovieService.Repository.MovieRepository;
+import com.project.MovieService.Service.MovieService;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +18,11 @@ import java.util.List;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -31,6 +34,9 @@ class MovieControllerInteTest {
     private ObjectMapper objectMapper;
     @Autowired
     MovieRepository movieRepository;
+
+    @Autowired
+    MovieService movieService;
 //    @BeforeEach
 //    void clean(){
 //        movieRepository.deleteAllInBatch();
@@ -72,6 +78,32 @@ class MovieControllerInteTest {
                 .andExpect(jsonPath("$.director", is(movie.getDirector())))
                 .andExpect((jsonPath("$.actors", is(movie.getActors()))));
 
+    }
+
+    @Test
+    void givenMovieId_whnfetchMovie_thenreturnallMovies()throws Exception{
+        Movie movie1=new Movie();
+        movie1.setName("RRR");
+        movie1.setDirector("S S Rajamouli");
+        movie1.setActors(Arrays.asList("NTR","Ram Charan","AliaBhat","AjayDevagan"));
+        Movie savedMovie1=movieRepository.save(movie1);
+
+        Movie movie2=new Movie();
+        movie2.setName("Sye");
+        movie2.setDirector("S S Rajamouli");
+        movie2.setActors(Arrays.asList("Nithin","Geniliya","Ashok","Rajiv"));
+        Movie savedMovie2=movieRepository.save(movie2);
+
+        List<Movie> movies = Arrays.asList(savedMovie1, savedMovie2);
+
+            when(movieRepository.findAll()).thenReturn(movies);
+
+        this.mockMvc.perform(get("/allMovies"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("Movies-list"))
+                .andExpect(model().attribute("Movies", movies))
+                .andExpect(model().attribute("Movies", Matchers.hasSize(3)))
+                .andDo(print());
     }
 
     @Test
