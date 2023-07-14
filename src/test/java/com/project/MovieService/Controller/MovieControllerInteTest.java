@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.MovieService.Model.Movie;
 import com.project.MovieService.Repository.MovieRepository;
 import com.project.MovieService.Service.MovieService;
+import lombok.RequiredArgsConstructor;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,16 +27,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@RequiredArgsConstructor
 class MovieControllerInteTest {
 
-    @Autowired
+
     private MockMvc mockMvc;
-    @Autowired
+
     private ObjectMapper objectMapper;
-    @Autowired
+
     MovieRepository movieRepository;
 
-    @Autowired
+
     MovieService movieService;
 //    @BeforeEach
 //    void clean(){
